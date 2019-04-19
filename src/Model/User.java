@@ -80,6 +80,26 @@ public class User extends ConnectionDB implements ModelInterface {
         return null;
     }
     
+    public UserLib findItemOnUserameAndType(String username, String type) 
+    {
+        String query = "SELECT * FROM " + this.table + " WHERE username = '" + username + "' AND type = '" + type + "'";
+        try {
+            ResultSet _ResultSet = super.ExecuteQuery(query);
+            
+            if(_ResultSet.first()) {
+                return new UserLib(_ResultSet.getInt("id"),
+                                     _ResultSet.getString("nama"),
+                                     _ResultSet.getString("username"),
+                                     _ResultSet.getString("password"),
+                                     _ResultSet.getString("type"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return null;
+    }
+    
     @Override
     public ResultSet list() {
         String query = "SELECT * FROM " + this.table;

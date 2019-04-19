@@ -9,6 +9,7 @@ import Lib.LoginInformation;
 import javax.swing.JOptionPane;
 import Model.Auth;
 import Lib.UserLib;
+import Seeder.UserSeeder;
 
 /**
  *
@@ -25,6 +26,8 @@ public class LoginForm extends javax.swing.JFrame {
         initComponents();
         
         authModel = new Auth();
+        UserSeeder userSeeder = new UserSeeder();
+        userSeeder.seed();
     }
 
     /**

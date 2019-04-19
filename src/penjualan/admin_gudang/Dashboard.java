@@ -5,6 +5,7 @@
  */
 package penjualan.admin_gudang;
 
+import Lib.LoginInformation;
 import penjualan.admin_gudang.barang.BarangForm;
 import penjualan.admin_gudang.barang_masuk.BarangMasukForm;
 
@@ -19,6 +20,9 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public Dashboard() {
         initComponents();
+        
+        lblUsername.setText(LoginInformation.username);
+        lblType.setText(LoginInformation.type);
     }
 
     /**
