@@ -12,16 +12,18 @@ package Lib;
 
 public class BarangLib {
     
-    protected Integer id = null;
-    protected String nama = null;
-    protected String jenis = null;
-    protected Integer harga = null;
-    protected Integer qty = null;
+    protected Integer id;
+    protected String kode;
+    protected String nama;
+    protected String jenis;
+    protected Integer harga;
+    protected Integer qty;
     
-    public static BarangLib NOT_FOUND = new BarangLib(0, "", "", 0, 0);
+    public static BarangLib NOT_FOUND = new BarangLib(0, "", "", "", 0, 0);
     
-    public BarangLib(int id, String nama, String jenis, Integer harga, Integer qty) {
+    public BarangLib(int id, String kode, String nama, String jenis, Integer harga, Integer qty) {
         this.id = id;
+        this.kode = kode;
         this.nama = nama;
         this.jenis = jenis;
         this.harga = harga;
@@ -30,6 +32,10 @@ public class BarangLib {
     
     public Integer getId() {
         return this.id;
+    }
+    
+    public String getKode() {
+        return this.kode;
     }
     
     public String getNama() {

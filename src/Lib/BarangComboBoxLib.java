@@ -12,13 +12,15 @@ package Lib;
 public class BarangComboBoxLib {
     
     protected Integer id;
+    protected String kode;
     protected String nama;
     protected String jenis;
     protected Integer harga;
     protected Integer qty;
     
-    public BarangComboBoxLib(Integer id, String nama, String jenis, Integer harga, Integer qty) {
+    public BarangComboBoxLib(Integer id, String kode, String nama, String jenis, Integer harga, Integer qty) {
         this.id = id;
+        this.kode = kode;
         this.nama = nama;
         this.jenis = jenis;
         this.harga = harga;
@@ -27,6 +29,10 @@ public class BarangComboBoxLib {
     
     public Integer getId() {
         return this.id;
+    }
+    
+    public String getKode() {
+        return this.kode;
     }
     
     public String getNama() {
@@ -45,9 +51,17 @@ public class BarangComboBoxLib {
         return this.qty;
     }
     
+    public Integer getTotal() {
+        return this.qty * this.harga;
+    }
+    
+    public void decrementQty(Integer qty) {
+        this.qty = this.qty - qty;
+    }
+    
     
     @Override
     public String toString() {
-        return this.nama + " - " + String.valueOf(this.harga);
+        return this.kode + " - " + this.nama;
     }
 }

@@ -10,6 +10,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import Lib.TransaksiLib;
 import Model.Transaksi;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -43,7 +44,7 @@ public class TransaksiForm extends javax.swing.JFrame {
     
     public void fillTable() {
         try {
-            Object[] column = new String[]{"id", "#", "Pembeli", "Tanggal", "Jumlah"};
+            Object[] column = new String[]{"id", "#", "Pembeli", "Tanggal", "Jumlah", "Total"};
 
             Object[][] data = new Object[][]{
             };
@@ -70,7 +71,8 @@ public class TransaksiForm extends javax.swing.JFrame {
                        String.valueOf(index),
                        item.getCustomer(),
                        item.getDate(),
-                       String.valueOf(item.getTransaksiDetailCount())
+                       String.valueOf(item.getTransaksiDetailCount()),
+                       item.getTotal().toString()
                     };
 
                     model.addRow(rowData);
@@ -103,6 +105,7 @@ public class TransaksiForm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         txtCari = new javax.swing.JTextField();
+        btnHapus = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -144,20 +147,51 @@ public class TransaksiForm extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 390, 320));
         jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 390, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 490, 400));
+        btnHapus.setText("Hapus");
+        btnHapus.setPreferredSize(new java.awt.Dimension(71, 23));
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 490, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
-        
+        TransaksiCreate.showForm().setVisible(true);
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         TransaksiForm.transaksiIndexForm = null;
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        
+        final int rowIndex = table.getSelectedRow();
+        
+        if (rowIndex != -1) {
+            final Integer id = Integer.valueOf(table.getValueAt(rowIndex, 0).toString());
+        
+            boolean deleteRow = this.transaksiModel.delete(id);
+
+            if (deleteRow) {
+                this.fillTable();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Hapus", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            return;
+        }
+        
+        JOptionPane.showMessageDialog(rootPane, "Data Belum Terpilih", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnHapusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,6 +229,7 @@ public class TransaksiForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnTambah;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

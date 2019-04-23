@@ -68,7 +68,7 @@ public class TransaksiCreate extends javax.swing.JFrame {
         transaksiDetailModel = new TransaksiDetail();
         
         setDateText();
-        disabledDateText();
+        disabledForm();
         zeroFillTable();
         setTable();
         setCmbBarang();
@@ -101,8 +101,12 @@ public class TransaksiCreate extends javax.swing.JFrame {
         txtTanggal.setText(dateString);
     }
     
-    private void disabledDateText() {
+    private void disabledForm() {
         txtTanggal.setEnabled(false);
+        txtHarga.setEnabled(false);
+        txtTersedia.setEnabled(false);
+        txtTotal.setEnabled(false);
+        txtKembalian.setEnabled(false);
     }
     
     private void setCmbBarang() {
@@ -113,7 +117,7 @@ public class TransaksiCreate extends javax.swing.JFrame {
                 DefaultComboBoxModel cmbModel = new DefaultComboBoxModel();
                 
                 for (BarangLib item: barangObject) {
-                    cmbModel.addElement(new BarangComboBoxLib(item.getId(), item.getNama(), item.getJenis(), item.getHarga(), item.getQty()));
+                    cmbModel.addElement(new BarangComboBoxLib(item.getId(), item.getKode(), item.getNama(), item.getJenis(), item.getHarga(), item.getQty()));
                 }
                
                 cmbBarang.setModel(cmbModel); 
@@ -146,8 +150,20 @@ public class TransaksiCreate extends javax.swing.JFrame {
         setTable();
     }
     
+    private void setTotalHarga() {
+        Integer harga = 0;
+        
+        for (TransaksiTemporaryLib transaksiItem: transaksiTemporaryObject) {
+            harga = harga + transaksiItem.getTotal();
+        } 
+        
+        txtTotal.setText(harga.toString());
+    }
+    
     private void addItemToTemporaryTable() {
         BarangComboBoxLib item = (BarangComboBoxLib) cmbBarang.getSelectedItem();
+        
+        item.decrementQty(Integer.valueOf(txtQty.getText()));
         
         int hasRow = 0;
         
@@ -163,6 +179,8 @@ public class TransaksiCreate extends javax.swing.JFrame {
         if (hasRow == 0) {
             transaksiTemporaryObject.add(new TransaksiTemporaryLib(0, item.getId(), item.getNama(), item.getHarga(), Integer.valueOf(txtQty.getText())));
         }
+        
+        setTotalHarga();
         
         resetTable();
     }
@@ -192,6 +210,16 @@ public class TransaksiCreate extends javax.swing.JFrame {
         btnHapus = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
+        txtTersedia = new javax.swing.JTextField();
+        txtHarga = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtPembayaran = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        txtKembalian = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -207,6 +235,12 @@ public class TransaksiCreate extends javax.swing.JFrame {
 
         jLabel2.setText("Nama");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 40, -1, 20));
+
+        cmbBarang.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbBarangItemStateChanged(evt);
+            }
+        });
         jPanel1.add(cmbBarang, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, 260, -1));
 
         txtQty.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -214,10 +248,10 @@ public class TransaksiCreate extends javax.swing.JFrame {
                 txtQtyKeyTyped(evt);
             }
         });
-        jPanel1.add(txtQty, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 70, 60, -1));
+        jPanel1.add(txtQty, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 110, -1));
 
         jLabel1.setText("Qty");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, -1, 20));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, -1, 20));
 
         btnTambah.setText("Tambah");
         btnTambah.addActionListener(new java.awt.event.ActionListener() {
@@ -225,7 +259,7 @@ public class TransaksiCreate extends javax.swing.JFrame {
                 btnTambahActionPerformed(evt);
             }
         });
-        jPanel1.add(btnTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 69, -1, 22));
+        jPanel1.add(btnTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, -1, 22));
 
         jLabel3.setText("Barang");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, 20));
@@ -246,7 +280,7 @@ public class TransaksiCreate extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(table);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 440, 340));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 440, 310));
 
         jLabel5.setText("Tambah Transaksi");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
@@ -257,15 +291,15 @@ public class TransaksiCreate extends javax.swing.JFrame {
                 btnHapusActionPerformed(evt);
             }
         });
-        jPanel1.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 70, -1));
+        jPanel1.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 70, -1));
 
-        btnSimpan.setText("Simpan");
+        btnSimpan.setText("Proses");
         btnSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSimpanActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(417, 460, 110, -1));
+        jPanel1.add(btnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 560, 110, -1));
 
         btnReset.setText("Reset");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
@@ -273,9 +307,38 @@ public class TransaksiCreate extends javax.swing.JFrame {
                 btnResetActionPerformed(evt);
             }
         });
-        jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 70, -1));
+        jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 70, -1));
+        jPanel1.add(txtTersedia, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 70, 120, -1));
+        jPanel1.add(txtHarga, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, 120, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 490));
+        jLabel6.setText("Tersedia");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 70, -1, 20));
+
+        jLabel7.setText("Harga");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 100, -1, 20));
+        jPanel1.add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(369, 460, 160, -1));
+
+        jLabel8.setText("Total");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 460, -1, 20));
+
+        txtPembayaran.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPembayaranKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPembayaranKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtPembayaran, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 490, 160, -1));
+
+        jLabel9.setText("Pembayaran");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 490, -1, 20));
+        jPanel1.add(txtKembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 520, 160, -1));
+
+        jLabel10.setText("Kembalian");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 520, -1, 20));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 550, 590));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -295,9 +358,18 @@ public class TransaksiCreate extends javax.swing.JFrame {
         } else if (Integer.valueOf(txtQty.getText()) <= 0) {
             JOptionPane.showMessageDialog(rootPane, "Qty Tidak Boleh Sama Dengan 0", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } else {
-            addItemToTemporaryTable();
-            cmbBarang.setSelectedIndex(-1);
-            txtQty.setText("");
+            
+            Integer qty = Integer.valueOf(txtQty.getText());
+            Integer tersedia = Integer.valueOf(txtTersedia.getText());
+            if (qty > tersedia) {
+                JOptionPane.showMessageDialog(rootPane, "Qty Tidak Boleh Melebihi Ketersediaan", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            } else {
+                addItemToTemporaryTable();
+                cmbBarang.setSelectedIndex(-1);
+                txtQty.setText("");
+                txtPembayaran.setText("");
+                txtKembalian.setText("");
+            }
         }
     }//GEN-LAST:event_btnTambahActionPerformed
 
@@ -315,7 +387,10 @@ public class TransaksiCreate extends javax.swing.JFrame {
               }
             }
             
+            setTotalHarga();
             resetTable();
+            txtPembayaran.setText("");
+            txtKembalian.setText("");
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
@@ -323,6 +398,10 @@ public class TransaksiCreate extends javax.swing.JFrame {
         // TODO add your handling code here:
         zeroFillTable();
         setTable();
+        txtTotal.setText("");
+        txtNama.setText("");
+        txtPembayaran.setText("");
+        txtKembalian.setText("");
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
@@ -336,7 +415,10 @@ public class TransaksiCreate extends javax.swing.JFrame {
                 List<String> request = new ArrayList<>();
                 
                 request.add(0, txtNama.getText());
-                request.add(0, txtTanggal.getText());
+                request.add(1, txtTanggal.getText());
+                request.add(2, txtTotal.getText());
+                request.add(3, txtPembayaran.getText());
+                request.add(4, txtKembalian.getText());
                 
                 boolean create = this.transaksiModel.create(request);
                 
@@ -351,12 +433,15 @@ public class TransaksiCreate extends javax.swing.JFrame {
                         requestDetail.add(2, String.valueOf(transaksiItem.getQty()));
                         
                         transaksiDetailModel.create(requestDetail);
+                        
+                        this.barangModel.decrementQty(transaksiItem.getQty(), transaksiItem.getItemId());
                     }
                     
                     btnReset.doClick();
-                    txtNama.setText("");
                     
                     TransaksiForm.showForm().fillTable();
+                    
+                    JOptionPane.showMessageDialog(rootPane, "Transaksi Berhasil Diproses");
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Transaksi Gagal Tersimpan");
                 }
@@ -372,6 +457,41 @@ public class TransaksiCreate extends javax.swing.JFrame {
         // TODO add your handling code here:
         TransaksiCreate.transaksiCreateForm = null;
     }//GEN-LAST:event_formWindowClosing
+
+    private void cmbBarangItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBarangItemStateChanged
+        // TODO add your handling code here:
+        if (cmbBarang.getSelectedIndex() != -1) {
+           BarangComboBoxLib item = (BarangComboBoxLib) cmbBarang.getSelectedItem(); 
+           
+           txtHarga.setText(item.getHarga().toString());
+           txtTersedia.setText(item.getQty().toString());
+        } else {
+           txtHarga.setText("");
+           txtTersedia.setText("");
+        }
+    }//GEN-LAST:event_cmbBarangItemStateChanged
+
+    private void txtPembayaranKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPembayaranKeyReleased
+        // TODO add your handling code here:
+        String bayar = txtPembayaran.getText();
+        
+        if (bayar.equals("") || transaksiTemporaryObject.size() == 0) {
+            txtKembalian.setText("");
+        } else {
+            Integer totalBayar = Integer.valueOf(bayar);
+            Integer kembalian = totalBayar - Integer.valueOf(txtTotal.getText());
+            
+            txtKembalian.setText(kembalian.toString());
+        }
+    }//GEN-LAST:event_txtPembayaranKeyReleased
+
+    private void txtPembayaranKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPembayaranKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_PERIOD))) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPembayaranKeyTyped
 
     /**
      * @param args the command line arguments
@@ -415,15 +535,25 @@ public class TransaksiCreate extends javax.swing.JFrame {
     private javax.swing.JButton btnTambah;
     private javax.swing.JComboBox<String> cmbBarang;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable table;
+    private javax.swing.JTextField txtHarga;
+    private javax.swing.JTextField txtKembalian;
     private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtPembayaran;
     private javax.swing.JTextField txtQty;
     private javax.swing.JTextField txtTanggal;
+    private javax.swing.JTextField txtTersedia;
+    private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }

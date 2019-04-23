@@ -22,6 +22,7 @@ public class Barang extends ConnectionDB implements ModelInterface {
     protected String table = "items";
     
     protected Object[] fillable = {
+       "kode",
        "nama",
        "harga",
        "qty",
@@ -43,6 +44,7 @@ public class Barang extends ConnectionDB implements ModelInterface {
                 while (_ResultSet.next()) {
                     barangObject.add(
                        new BarangLib(_ResultSet.getInt("id"),
+                                     _ResultSet.getString("kode"),
                                      _ResultSet.getString("nama"),
                                      _ResultSet.getString("jenis"),
                                      _ResultSet.getInt("harga"),
@@ -66,6 +68,7 @@ public class Barang extends ConnectionDB implements ModelInterface {
             
             if(_ResultSet.first()) {
                 return new BarangLib(_ResultSet.getInt("id"),
+                                     _ResultSet.getString("kode"),
                                      _ResultSet.getString("nama"),
                                      _ResultSet.getString("jenis"),
                                      _ResultSet.getInt("harga"),
@@ -76,6 +79,44 @@ public class Barang extends ConnectionDB implements ModelInterface {
         }
         
         return null;
+    }
+    
+     public boolean decrementQty(Integer qty, Integer id) {
+        String query = "UPDATE " + this.table + " SET " +
+                        " qty = qty - '" + qty + "'" +
+                        " WHERE id = '" + id + "'";
+        try {
+            Integer _ResultSet = super.ExecuteUpdate(query);
+            
+            return _ResultSet >= 1;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return false;
+    }
+    
+    public Boolean checkCode(String code, String oldCode) {
+        String query = "";
+        if (oldCode != null) {
+            query = "SELECT * FROM " + this.table + " WHERE kode = '" + code + "' AND kode != '" + oldCode + "'";
+        } else {
+            query = "SELECT * FROM " + this.table + " WHERE kode = '" + code + "'";
+        }
+     
+        try {
+            ResultSet _ResultSet = super.ExecuteQuery(query);
+            
+            if(_ResultSet.first()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return false;
     }
     
     @Override
@@ -94,13 +135,14 @@ public class Barang extends ConnectionDB implements ModelInterface {
 
     @Override
     public boolean create(List<String> request) {
-        String query = "INSERT INTO " + table + " (id, nama, jenis, harga, qty) " +
+        String query = "INSERT INTO " + table + " (id, kode, nama, jenis, harga, qty) " +
                         "VALUES (" + 
                         "null," + 
                         "'" + request.get(0) + "'," + 
                         "'" + request.get(1) + "'," + 
                         "'" + request.get(2) + "'," + 
-                        "'" + request.get(3) + "'" + 
+                        "'" + request.get(3) + "'," + 
+                        "'" + request.get(4) + "'" + 
                         ")";
         try {
             Integer _ResultSet = super.ExecuteUpdate(query);
@@ -116,10 +158,11 @@ public class Barang extends ConnectionDB implements ModelInterface {
     @Override
     public boolean update(List<String> request, Integer id) {
         String query = "UPDATE " + this.table + " SET " +
-                        " nama = '" + request.get(0) + "'," +
-                        " jenis = '" + request.get(1) + "'," +
-                        " harga = '" + request.get(2) + "'," +
-                        " qty = '" + request.get(3) + "' " +
+                        " kode = '" + request.get(0) + "'," +
+                        " nama = '" + request.get(1) + "'," +
+                        " jenis = '" + request.get(2) + "'," +
+                        " harga = '" + request.get(3) + "'," +
+                        " qty = '" + request.get(4) + "' " +
                         " WHERE id = '" + id + "'";
         try {
             Integer _ResultSet = super.ExecuteUpdate(query);

@@ -24,7 +24,10 @@ public class Transaksi extends ConnectionDB implements ModelInterface {
     
     protected Object[] fillable = {
        "customer",
-       "date"
+       "date",
+       "total",
+       "pembayaran",
+       "kembalian"
     };
     
     public Transaksi() {
@@ -58,7 +61,8 @@ public class Transaksi extends ConnectionDB implements ModelInterface {
                         TransaksiLib newItem = new TransaksiLib(
                             _ResultSet.getInt("id"), 
                             _ResultSet.getString("customer"),
-                            _ResultSet.getString("date")
+                            _ResultSet.getString("date"),
+                            _ResultSet.getInt("total")
                         );
                         
                         String transaction_details_id = _ResultSet.getString("transaction_details_id");
@@ -92,11 +96,12 @@ public class Transaksi extends ConnectionDB implements ModelInterface {
     
     public Integer getLastId() {
         String query = "SELECT id FROM " + this.table + 
-                       "  ORDER BY id DESC";
+                       " ORDER BY id DESC";
         try {
             ResultSet _ResultSet = super.ExecuteQuery(query);
-            
-            return _ResultSet.getInt("id");
+            if (_ResultSet.first()) {
+                return _ResultSet.getInt("id");
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -125,11 +130,14 @@ public class Transaksi extends ConnectionDB implements ModelInterface {
 
     @Override
     public boolean create(List<String> request) {
-        String query = "INSERT INTO " + table + " (id, customer, date) " +
+        String query = "INSERT INTO " + table + " (id, customer, date, total, pembayaran, kembalian) " +
                         "VALUES (" + 
                         "null," + 
                         "'" + request.get(0) + "'," + 
-                        "'" + request.get(1) + "'" +
+                        "'" + request.get(1) + "'," +
+                        "'" + request.get(2) + "'," +
+                        "'" + request.get(3) + "'," +
+                        "'" + request.get(4) + "'" +
                         ")";
         try {
             Integer _ResultSet = super.ExecuteUpdate(query);
@@ -157,8 +165,9 @@ public class Transaksi extends ConnectionDB implements ModelInterface {
     }
 
     @Override
-    public boolean delete(Integer id) {
-        String query = "DELETE FROM " + this.table + " WHERE id = " + id;
+    public boolean delete(Integer id) {        
+        String query = " DELETE FROM transaction_details WHERE transaction_details.transaction_id = '" + id + "';" +
+                       " DELETE FROM " + this.table + " WHERE id = '" + id + "';";
         try {
             Integer _ResultSet = super.ExecuteUpdate(query);
             

@@ -50,7 +50,7 @@ public class BarangMasukLib {
     }
     
     public void setItemDetailObject(List<String> request) {
-        itemDetailObject.add(new BarangLib(Integer.valueOf(request.get(0)), request.get(1), request.get(2), Integer.valueOf(request.get(3)), Integer.valueOf(Integer.valueOf(4)) ));
+        itemDetailObject.add(new BarangLib(Integer.valueOf(request.get(0)), request.get(1), request.get(2), request.get(3), Integer.valueOf(request.get(4)), Integer.valueOf(request.get(5)) ));
     }
     
     public List<BarangLib> itemDetail() {

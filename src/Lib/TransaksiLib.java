@@ -16,13 +16,15 @@ public class TransaksiLib {
     protected Integer id;
     protected String customer;
     protected String date;
+    protected Integer total;
     
     protected List<TransaksiDetailLib> transaksiDetailObject = new ArrayList<>();
     
-    public TransaksiLib(int id, String customer, String date) {
+    public TransaksiLib(int id, String customer, String date, Integer total) {
         this.id = id;
         this.customer = customer;
         this.date = date;
+        this.total = total;
     }
     
     public Integer getId() {
@@ -35,6 +37,10 @@ public class TransaksiLib {
     
     public String getDate() {
         return this.date;
+    }
+    
+    public Integer getTotal() {
+        return this.total;
     }
     
     public void setTransaksiDetailObject(List<String> request) {

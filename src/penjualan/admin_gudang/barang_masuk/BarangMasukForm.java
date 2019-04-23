@@ -13,6 +13,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import Model.BarangMasuk;
 import java.util.Optional;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -110,13 +111,14 @@ public class BarangMasukForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btnKembali = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         txtCari = new javax.swing.JTextField();
         btnTambah = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        btnHapus = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -127,9 +129,6 @@ public class BarangMasukForm extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        btnKembali.setText("Kembali");
-        jPanel1.add(btnKembali, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, -1, -1));
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -161,6 +160,19 @@ public class BarangMasukForm extends javax.swing.JFrame {
         jLabel1.setText("Barang Masuk");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 11, -1, -1));
 
+        btnHapus.setText("Hapus");
+        btnHapus.setPreferredSize(new java.awt.Dimension(71, 23));
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, -1, -1));
+
+        btnEdit.setText("Edit");
+        btnEdit.setPreferredSize(new java.awt.Dimension(71, 23));
+        jPanel1.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 490, 400));
 
         pack();
@@ -175,6 +187,27 @@ public class BarangMasukForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         BarangMasukForm.barangMasukIndexForm = null;
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        final int rowIndex = table.getSelectedRow();
+        
+        if (rowIndex != -1) {
+            final Integer id = Integer.valueOf(table.getValueAt(rowIndex, 0).toString());
+        
+            boolean deleteRow = this.barangMasukModel.delete(id);
+
+            if (deleteRow) {
+                this.fillTable();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Hapus", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            return;
+        }
+        
+        JOptionPane.showMessageDialog(rootPane, "Data Belum Terpilih", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnHapusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -212,7 +245,8 @@ public class BarangMasukForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnKembali;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnTambah;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

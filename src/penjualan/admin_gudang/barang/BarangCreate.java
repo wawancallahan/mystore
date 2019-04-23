@@ -58,6 +58,8 @@ public class BarangCreate extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         btnSimpan = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
+        txtKode = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -70,32 +72,32 @@ public class BarangCreate extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Nama");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, 20));
-        jPanel1.add(txtNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, 290, -1));
-        jPanel1.add(txtJenis, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, 290, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, 20));
+        jPanel1.add(txtNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 290, -1));
+        jPanel1.add(txtJenis, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 290, -1));
 
         jLabel2.setText("Jenis");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, 20));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, 20));
 
         txtHarga.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtHargaKeyTyped(evt);
             }
         });
-        jPanel1.add(txtHarga, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, 290, -1));
+        jPanel1.add(txtHarga, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, 290, -1));
 
         jLabel3.setText("Harga");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, 20));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, 20));
 
         txtQty.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtQtyKeyTyped(evt);
             }
         });
-        jPanel1.add(txtQty, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 290, -1));
+        jPanel1.add(txtQty, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, 290, -1));
 
         jLabel4.setText("Qty");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, 20));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, 20));
 
         btnSimpan.setText("Simpan");
         btnSimpan.addActionListener(new java.awt.event.ActionListener() {
@@ -103,10 +105,20 @@ public class BarangCreate extends javax.swing.JFrame {
                 btnSimpanActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, -1, -1));
+        jPanel1.add(btnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 190, -1, -1));
 
         jLabel5.setText("Tambah Barang");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
+
+        txtKode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtKodeKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtKode, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 290, -1));
+
+        jLabel6.setText("Kode");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, 20));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 220));
 
@@ -131,24 +143,29 @@ public class BarangCreate extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
-        if (txtNama.getText().equals("") || txtJenis.getText().equals("") || txtHarga.getText().equals("") || txtQty.getText().equals("")) {
+        if (txtKode.getText().equals("") || txtNama.getText().equals("") || txtJenis.getText().equals("") || txtHarga.getText().equals("") || txtQty.getText().equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Semua Input Harus Diisi", "Peringatan", JOptionPane.WARNING_MESSAGE);
             
             return;
         } 
         
         List<String> request = new ArrayList<>();
-        request.add(0, txtNama.getText());
-        request.add(1, txtJenis.getText());
-        request.add(2, txtHarga.getText());
-        request.add(3, txtQty.getText());
+        request.add(0, txtKode.getText());
+        request.add(1, txtNama.getText());
+        request.add(2, txtJenis.getText());
+        request.add(3, txtHarga.getText());
+        request.add(4, txtQty.getText());
         
-        boolean create = this.barangModel.create(request);
+        if (this.barangModel.checkCode(txtKode.getText(), null)) {
+            boolean create = this.barangModel.create(request);
         
-        if (create) {
-            this.dispose();
+            if (create) {
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Kode Telah Ada Sebelumnya", "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
@@ -156,6 +173,14 @@ public class BarangCreate extends javax.swing.JFrame {
         // TODO add your handling code here:
         BarangCreate.barangCreateForm = null;
     }//GEN-LAST:event_formWindowClosing
+
+    private void txtKodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKodeKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_PERIOD))) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtKodeKeyTyped
 
     /**
      * @param args the command line arguments
@@ -199,9 +224,11 @@ public class BarangCreate extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtHarga;
     private javax.swing.JTextField txtJenis;
+    private javax.swing.JTextField txtKode;
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtQty;
     // End of variables declaration//GEN-END:variables

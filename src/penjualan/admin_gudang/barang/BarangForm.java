@@ -58,7 +58,7 @@ public class BarangForm extends javax.swing.JFrame {
     public void fillTable() {
         try {
             
-            Object[] column = new String[]{"id", "#", "Nama", "Jenis", "Harga", "Qty"};
+            Object[] column = new String[]{"id", "#", "Kode", "Nama", "Jenis", "Harga", "Qty"};
 
             Object[][] data = new Object[][]{
             };
@@ -83,6 +83,7 @@ public class BarangForm extends javax.swing.JFrame {
                     Object[] rowData = new Object[] {
                        item.getId(),
                        String.valueOf(index),
+                       item.getKode(),
                        item.getNama(),
                        item.getJenis(),
                        item.getHarga(),

@@ -71,7 +71,7 @@ public class BarangMasukCreate extends javax.swing.JFrame {
                 DefaultComboBoxModel cmbModel = new DefaultComboBoxModel();
                 
                 for (BarangLib item: barangObject) {
-                    cmbModel.addElement(new BarangComboBoxLib(item.getId(), item.getNama(), item.getJenis(), item.getHarga(), item.getQty()));
+                    cmbModel.addElement(new BarangComboBoxLib(item.getId(), item.getKode(), item.getNama(), item.getJenis(), item.getHarga(), item.getQty()));
                 }
                
                 cmbBarang.setModel(cmbModel); 

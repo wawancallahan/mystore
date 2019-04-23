@@ -154,7 +154,7 @@ public class BarangMasuk extends ConnectionDB implements ModelInterface {
 
     @Override
     public boolean delete(Integer id) {
-        String query = "DELETE FROM " + this.table + " WHERE id = " + id;
+        String query = "DELETE FROM " + this.table + " WHERE id = '" + id + "'";
         try {
             Integer _ResultSet = super.ExecuteUpdate(query);
             
