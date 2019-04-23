@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2019 at 02:21 PM
+-- Generation Time: Apr 23, 2019 at 04:56 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -36,13 +36,6 @@ CREATE TABLE `import_transactions` (
   `qty` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `import_transactions`
---
-
-INSERT INTO `import_transactions` (`id`, `tanggal`, `pemasok`, `item_id`, `qty`) VALUES
-(1, '2019-04-14', 'asd', 1, 2);
-
 -- --------------------------------------------------------
 
 --
@@ -51,18 +44,12 @@ INSERT INTO `import_transactions` (`id`, `tanggal`, `pemasok`, `item_id`, `qty`)
 
 CREATE TABLE `items` (
   `id` bigint(20) NOT NULL,
+  `kode` varchar(255) NOT NULL,
   `nama` varchar(255) NOT NULL,
   `jenis` varchar(255) NOT NULL,
   `harga` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `qty` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `items`
---
-
-INSERT INTO `items` (`id`, `nama`, `jenis`, `harga`, `qty`) VALUES
-(1, 'BlackPin1', 'szz', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -73,16 +60,11 @@ INSERT INTO `items` (`id`, `nama`, `jenis`, `harga`, `qty`) VALUES
 CREATE TABLE `transactions` (
   `id` bigint(20) NOT NULL,
   `customer` varchar(255) NOT NULL,
-  `date` date NOT NULL
+  `date` date NOT NULL,
+  `total` int(11) NOT NULL,
+  `pembayaran` int(11) NOT NULL,
+  `kembalian` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `transactions`
---
-
-INSERT INTO `transactions` (`id`, `customer`, `date`) VALUES
-(1, 'asd', '2019-04-03'),
-(2, 'jsh', '2019-04-10');
 
 -- --------------------------------------------------------
 
@@ -96,14 +78,6 @@ CREATE TABLE `transaction_details` (
   `item_id` bigint(20) NOT NULL,
   `qty` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `transaction_details`
---
-
-INSERT INTO `transaction_details` (`id`, `transaction_id`, `item_id`, `qty`) VALUES
-(1, 1, 1, 5),
-(2, 1, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -120,15 +94,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `nama`, `username`, `password`, `type`) VALUES
-(1, 'Admin', 'admin', '123', 'Admin'),
-(2, 'Admin Kasir', 'admin_kasir', '123', 'Admin Kasir'),
-(3, 'Admin Gudang', 'admin_gudang', '123', 'Admin Gudang');
-
---
 -- Indexes for dumped tables
 --
 
@@ -143,7 +108,8 @@ ALTER TABLE `import_transactions`
 -- Indexes for table `items`
 --
 ALTER TABLE `items`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `kode` (`kode`);
 
 --
 -- Indexes for table `transactions`
@@ -180,19 +146,19 @@ ALTER TABLE `import_transactions`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `transaction_details`
 --
 ALTER TABLE `transaction_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
