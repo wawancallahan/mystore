@@ -51,10 +51,11 @@ public class BarangMasuk extends ConnectionDB implements ModelInterface {
                         List<String> request = new ArrayList<>();
                             
                         request.add(0, _ResultSet.getString("items_id"));
-                        request.add(1, _ResultSet.getString("items_nama"));
-                        request.add(2, _ResultSet.getString("items_jenis"));
-                        request.add(3, _ResultSet.getString("items_harga"));
-                        request.add(4, _ResultSet.getString("items_qty"));
+                        request.add(1, _ResultSet.getString("items_kode"));
+                        request.add(2, _ResultSet.getString("items_nama"));
+                        request.add(3, _ResultSet.getString("items_jenis"));
+                        request.add(4, _ResultSet.getString("items_harga"));
+                        request.add(5, _ResultSet.getString("items_qty"));
                             
                         constainItem.get().setItemDetailObject(request);
                     } else {
@@ -73,10 +74,11 @@ public class BarangMasuk extends ConnectionDB implements ModelInterface {
                             List<String> request = new ArrayList<>();
                             
                             request.add(0, _ResultSet.getString("items_id"));
-                            request.add(1, _ResultSet.getString("items_nama"));
-                            request.add(2, _ResultSet.getString("items_jenis"));
-                            request.add(3, _ResultSet.getString("items_harga"));
-                            request.add(4, _ResultSet.getString("items_qty"));
+                            request.add(1, _ResultSet.getString("items_kode"));
+                            request.add(2, _ResultSet.getString("items_nama"));
+                            request.add(3, _ResultSet.getString("items_jenis"));
+                            request.add(4, _ResultSet.getString("items_harga"));
+                            request.add(5, _ResultSet.getString("items_qty"));
                             
                             newItem.setItemDetailObject(request);
                         }
@@ -95,15 +97,61 @@ public class BarangMasuk extends ConnectionDB implements ModelInterface {
         
         return null;
     }
+    
+    public BarangMasukLib findIitem(Integer id) {
+        String query = "SELECT import_transactions.id, import_transactions.item_id, import_transactions.tanggal, import_transactions.pemasok, import_transactions.qty, " +
+                        " items.id AS items_id, items.kode AS items_kode, items.nama AS items_nama, items.jenis AS items_jenis, items.harga AS items_harga, items.qty AS items_qty " +
+                        " FROM " + this.table + 
+                        " LEFT JOIN " +
+                        " items ON items.id = (" +
+                        " SELECT id FROM items WHERE items.id = " + this.table + ".item_id" +
+                        " LIMIT 1 )" +
+                        " WHERE import_transactions.id = '" + id + "' ORDER BY id DESC";
+        try {
+            ResultSet _ResultSet = super.ExecuteQuery(query);
+            
+            if(_ResultSet.first()) {
+                BarangMasukLib item = new BarangMasukLib(
+                        _ResultSet.getInt("id"), 
+                        _ResultSet.getString("tanggal"),
+                        _ResultSet.getString("pemasok"),
+                        _ResultSet.getInt("item_id"),
+                        _ResultSet.getInt("qty")
+                );
+                
+                String item_id = _ResultSet.getString("item_id");
+                        
+                if ( ! _ResultSet.wasNull()) {
+
+                    List<String> request = new ArrayList<>();
+
+                    request.add(0, _ResultSet.getString("items_id"));
+                    request.add(1, _ResultSet.getString("items_kode"));
+                    request.add(2, _ResultSet.getString("items_nama"));
+                    request.add(3, _ResultSet.getString("items_jenis"));
+                    request.add(4, _ResultSet.getString("items_harga"));
+                    request.add(5, _ResultSet.getString("items_qty"));
+
+                    item.setItemDetailObject(request);
+                }
+                
+                return item;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return null;
+    }
 
     @Override
     public ResultSet list() {
         String query = "SELECT import_transactions.id, import_transactions.item_id, import_transactions.tanggal, import_transactions.pemasok, import_transactions.qty, " +
-                        " items.id AS items_id, items.nama AS items_nama, items.jenis AS items_jenis, items.harga AS items_harga, items.qty AS items_qty " +
+                        " items.id AS items_id, items.kode AS items_kode, items.nama AS items_nama, items.jenis AS items_jenis, items.harga AS items_harga, items.qty AS items_qty " +
                         " FROM " + this.table + 
                         " LEFT JOIN " +
-                        " items ON " + this.table + ".item_id = (" +
-                        " SELECT id FROM items WHERE id = " + this.table + ".item_id" +
+                        " items ON items.id = (" +
+                        " SELECT id FROM items WHERE items.id = " + this.table + ".item_id" +
                         " LIMIT 1 )" +
                         "  ORDER BY id DESC";
         try {
@@ -140,7 +188,12 @@ public class BarangMasuk extends ConnectionDB implements ModelInterface {
 
     @Override
     public boolean update(List<String> request, Integer id) {
-        String query = "";
+        String query = "UPDATE " + this.table + " SET " +
+                       "tanggal = '" + request.get(0) + "', " +
+                       "pemasok = '" + request.get(1) + "', " + 
+                       "item_id = '" + request.get(2) + "', " + 
+                       "qty = '" + request.get(3) + "'" +
+                       " WHERE id = '" + id + "'";
         try {
             Integer _ResultSet = super.ExecuteUpdate(query);
             

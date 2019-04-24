@@ -34,7 +34,8 @@ public class BarangMasukForm extends javax.swing.JFrame {
     public BarangMasukForm() {
         initComponents();
         barangMasukModel = new BarangMasuk();
-        fillTable();
+        
+        this.fillTable();
     }
     
     public static BarangMasukForm showForm() {
@@ -46,20 +47,20 @@ public class BarangMasukForm extends javax.swing.JFrame {
     }
     
     public void fillTable() {
-        try {
-            Object[] column = new String[]{"id", "#", "Tanggal", "Pemasok", "Barang", "Jumlah"};
+        Object[] column = new String[]{"id", "#", "Tanggal", "Pemasok", "Barang", "Jumlah"};
 
-            Object[][] data = new Object[][]{
-            };
+        Object[][] data = new Object[][]{
+        };
+
+        DefaultTableModel model = new DefaultTableModel(data, column){
+
+            @Override
+                public boolean isCellEditable(int row, int col){
+                        return false;
+                }
+        };
             
-            DefaultTableModel model = new DefaultTableModel(data, column){
-
-                @Override
-                    public boolean isCellEditable(int row, int col){
-                            return false;
-                    }
-            };
-
+        try {
             List<BarangMasukLib> barangMasukObject = this.barangMasukModel.getItems();
             model.setRowCount(0);
             
@@ -90,15 +91,13 @@ public class BarangMasukForm extends javax.swing.JFrame {
                     model.addRow(rowData);
                 }
             }
-
-            this.table.setModel(model);
-            this.table.getColumnModel().getColumn(0).setMinWidth(0);
-            this.table.getColumnModel().getColumn(0).setMaxWidth(0);
-            this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error " + e.getMessage());
         }
-        
+        this.table.setModel(model);
+        this.table.getColumnModel().getColumn(0).setMinWidth(0);
+        this.table.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     /**
@@ -171,6 +170,11 @@ public class BarangMasukForm extends javax.swing.JFrame {
 
         btnEdit.setText("Edit");
         btnEdit.setPreferredSize(new java.awt.Dimension(71, 23));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 490, 400));
@@ -208,6 +212,21 @@ public class BarangMasukForm extends javax.swing.JFrame {
         
         JOptionPane.showMessageDialog(rootPane, "Data Belum Terpilih", "Informasi", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+        final int rowIndex = table.getSelectedRow();
+        
+        if (rowIndex != -1) {
+            final Integer id = Integer.valueOf(table.getValueAt(rowIndex, 0).toString());
+
+            BarangMasukEdit.showForm(id).setVisible(true);
+            
+            return;
+        }
+        
+        JOptionPane.showMessageDialog(rootPane, "Data Belum Terpilih", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnEditActionPerformed
 
     /**
      * @param args the command line arguments

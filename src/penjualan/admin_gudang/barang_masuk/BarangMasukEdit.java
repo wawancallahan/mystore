@@ -5,17 +5,111 @@
  */
 package penjualan.admin_gudang.barang_masuk;
 
+import Lib.BarangComboBoxLib;
+import Lib.BarangLib;
+import Lib.BarangMasukLib;
+import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import Model.BarangMasuk;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import Model.Barang;
+import java.util.Optional;
 /**
  *
  * @author Timy
  */
 public class BarangMasukEdit extends javax.swing.JFrame {
 
+    
+    protected BarangMasuk barangMasukModel;
+    protected Barang barangModel;
+    private static BarangMasukEdit barangMasukEditForm = null;
+    public Integer id;
+    
+    
     /**
      * Creates new form BarangMasukEdit
      */
     public BarangMasukEdit() {
         initComponents();
+        
+        barangMasukModel = new BarangMasuk();
+        barangModel = new Barang();
+        setCmbBarang();
+    }
+    
+     private void setCmbBarang() {
+        try {
+            List<BarangLib> barangObject = barangModel.getItems();
+            
+            if (barangObject != null) {
+                DefaultComboBoxModel cmbModel = new DefaultComboBoxModel();
+                
+                for (BarangLib item: barangObject) {
+                    cmbModel.addElement(new BarangComboBoxLib(item.getId(), item.getKode(), item.getNama(), item.getJenis(), item.getHarga(), item.getQty()));
+                }
+               
+                cmbBarang.setModel(cmbModel); 
+                cmbBarang.setSelectedIndex(-1);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public static BarangMasukEdit showForm(Integer id) {
+        if (barangMasukEditForm == null) {
+            barangMasukEditForm = new BarangMasukEdit().setId(id).setModelForm();
+        }
+        
+        return barangMasukEditForm;
+    }
+    
+    public BarangMasukEdit setId(Integer id) {
+        this.id = id;
+        
+        return this;
+    }
+    
+    private BarangMasukEdit setModelForm() {
+        if (this.id != null) {
+            BarangMasukLib item = barangMasukModel.findIitem(this.id);
+            
+            if (item != null) {
+                
+                try {
+                    Date tanggal = new SimpleDateFormat("yyyy-MM-dd").parse(item.getTanggal());
+
+                    txtDate.setDate(tanggal);
+                } catch (ParseException ex) {
+                    System.out.println(ex);
+                }
+                txtPemasok.setText(item.getPemasok());
+                txtQty.setText(item.getQty().toString());
+                
+                List<BarangLib> itemBarangObject = item.itemDetail();
+                Optional<BarangLib> itemFirst = itemBarangObject.stream().findFirst();
+
+                BarangLib item_barang = BarangLib.NOT_FOUND;
+
+                if (itemFirst.isPresent()) {
+                    item_barang = itemFirst.get();
+                    
+                    System.out.println(item_barang.getNama());
+                    
+                    cmbBarang.getModel().setSelectedItem(new BarangComboBoxLib(item_barang.getId(), item_barang.getKode(), item_barang.getNama(), item_barang.getJenis(), item_barang.getHarga(), item_barang.getQty()));
+                }
+            }
+        }
+        
+        return this;
     }
 
     /**
@@ -27,21 +121,120 @@ public class BarangMasukEdit extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtPemasok = new javax.swing.JTextField();
+        cmbBarang = new javax.swing.JComboBox<>();
+        txtQty = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        txtDate = new com.toedter.calendar.JDateChooser();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setText("Edit Barang Masuk");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
+
+        jLabel2.setText("Barang");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, -1, -1));
+
+        jLabel3.setText("Tanggal");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, -1, -1));
+
+        jLabel4.setText("Pemasok");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, -1, -1));
+
+        jLabel5.setText("Qty");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, -1));
+        jPanel1.add(txtPemasok, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 210, -1));
+
+        cmbBarang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        jPanel1.add(cmbBarang, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 110, 210, -1));
+
+        txtQty.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtQtyKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtQtyKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtQty, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, 210, -1));
+
+        jButton1.setText("Simpan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, 90, -1));
+
+        txtDate.setDateFormatString("yyyy-MM-dd");
+        jPanel1.add(txtDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 210, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 340, 220));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtQtyKeyReleased
+
+    private void txtQtyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_PERIOD))) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtQtyKeyTyped
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+
+        if (txtDate.getDateFormatString().equals("") || txtPemasok.getText().equals("") || cmbBarang.getSelectedIndex() == -1 || txtQty.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Semua Input Harus Diisi", "Peringatan", JOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        BarangComboBoxLib item = (BarangComboBoxLib) cmbBarang.getSelectedItem();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String date_string = formatter.format(txtDate.getDate());
+
+        List<String> request = new ArrayList<>();
+        request.add(0, date_string);
+        request.add(1, txtPemasok.getText());
+        request.add(2, String.valueOf(item.getId()));
+        request.add(3, txtQty.getText());
+
+        boolean update = this.barangMasukModel.update(request, this.id);
+
+        if (update) {
+            this.dispose();
+
+            BarangMasukForm.showForm().fillTable();
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        BarangMasukEdit.barangMasukEditForm = null;
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -79,5 +272,16 @@ public class BarangMasukEdit extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cmbBarang;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private com.toedter.calendar.JDateChooser txtDate;
+    private javax.swing.JTextField txtPemasok;
+    private javax.swing.JTextField txtQty;
     // End of variables declaration//GEN-END:variables
 }
