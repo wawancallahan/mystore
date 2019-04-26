@@ -20,6 +20,7 @@ public class UserEdit extends javax.swing.JFrame {
     private static UserEdit userEditForm = null;
     protected Integer id;
     protected User userModel;
+    protected String oldUsername;
     /**
      * Creates new form UserEdit
      */
@@ -27,6 +28,15 @@ public class UserEdit extends javax.swing.JFrame {
         initComponents();
         
         userModel = new User();
+        setCmbJenis();
+    }
+    
+    private void setCmbJenis() {
+        cmbJenis.addItem("Admin");
+        cmbJenis.addItem("Admin Kasir");
+        cmbJenis.addItem("Admin Gudang");
+        
+        cmbJenis.setSelectedIndex(-1);
     }
     
     public static UserEdit showForm(Integer id) {
@@ -52,6 +62,8 @@ public class UserEdit extends javax.swing.JFrame {
                 txtUsername.setText(item.getUsername());
                 txtPassword.setText(item.getPassword());
                 cmbJenis.setSelectedItem(item.getType());
+                
+                oldUsername = item.getUsername();
             }
         }
         
@@ -131,12 +143,16 @@ public class UserEdit extends javax.swing.JFrame {
 
         boolean update = this.userModel.update(request, this.id);
 
-        if (update) {
-            this.dispose();
-            
-            UserForm.showForm().fillTable();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+        if (this.userModel.checkUsername(txtUsername.getText(), oldUsername)) {
+            if (update) {
+                UserForm.showForm().fillTable();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(rootPane, "Username Telah Ada", "Informasi", JOptionPane.INFORMATION_MESSAGE);        
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
 

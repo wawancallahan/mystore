@@ -223,9 +223,9 @@ public class BarangMasukEdit extends javax.swing.JFrame {
         boolean update = this.barangMasukModel.update(request, this.id);
 
         if (update) {
-            this.dispose();
-
             BarangMasukForm.showForm().fillTable();
+            
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }

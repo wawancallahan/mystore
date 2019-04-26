@@ -40,11 +40,21 @@ public class BarangForm extends javax.swing.JFrame {
         if (LoginInformation.type != null) {
             switch (LoginInformation.type) {
             case "Admin Kasir":
+                    btnTambah.setVisible(false);
                     btnEdit.setVisible(false);
                     btnHapus.setVisible(false);
                 break;
             }
         }
+        
+        fillCmbFilter();
+    }
+    
+    private void fillCmbFilter() {
+        cmbFilter.addItem("Kode");
+        cmbFilter.addItem("Nama");
+        
+        cmbFilter.setSelectedIndex(-1);
     }
     
     public static BarangForm showForm() {
@@ -70,7 +80,7 @@ public class BarangForm extends javax.swing.JFrame {
                             return false;
                     }
             };
-
+       
             List<BarangLib> barangObject = this.barangModel.getItems();
             model.setRowCount(0);
             
@@ -113,13 +123,15 @@ public class BarangForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        txtCari = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         btnHapus = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnTambah = new javax.swing.JButton();
+        cmbFilter = new javax.swing.JComboBox<>();
+        btnCari = new javax.swing.JButton();
+        txtCari = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -130,7 +142,6 @@ public class BarangForm extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 30, 390, -1));
 
         jLabel1.setText("Pencarian");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, 20));
@@ -173,6 +184,17 @@ public class BarangForm extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, -1));
+
+        jPanel1.add(cmbFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 30, 80, -1));
+
+        btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, -1, -1));
+        jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 240, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 490, 390));
 
@@ -226,6 +248,58 @@ public class BarangForm extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(rootPane, "Data Belum Terpilih", "Informasi", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnEditActionPerformed
 
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        // TODO add your handling code here:
+        if ( ! (cmbFilter.getSelectedIndex() == -1 || txtCari.getText().equals(""))) {
+            try { 
+                Object[] column = new String[]{"id", "#", "Kode", "Nama", "Jenis", "Harga", "Qty"};
+
+                Object[][] data = new Object[][]{
+                };
+
+                DefaultTableModel model = new DefaultTableModel(data, column){
+
+                    @Override
+                        public boolean isCellEditable(int row, int col){
+                                return false;
+                        }
+                };
+
+                List<BarangLib> barangObject = this.barangModel.getItemsFilter(cmbFilter.getSelectedItem().toString(), txtCari.getText());
+                model.setRowCount(0);
+
+                if (barangObject != null) {
+                    int index = 0;
+
+                    for (BarangLib item : barangObject) {
+                        index++;
+
+                        Object[] rowData = new Object[] {
+                           item.getId(),
+                           String.valueOf(index),
+                           item.getKode(),
+                           item.getNama(),
+                           item.getJenis(),
+                           item.getHarga(),
+                           item.getQty()
+                        };
+
+                        model.addRow(rowData);
+                    }
+                }
+
+                this.table.setModel(model);
+                this.table.getColumnModel().getColumn(0).setMinWidth(0);
+                this.table.getColumnModel().getColumn(0).setMaxWidth(0);
+                this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }  
+        } else {
+            this.fillTable();
+        }
+    }//GEN-LAST:event_btnCariActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -262,9 +336,11 @@ public class BarangForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCari;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnTambah;
+    private javax.swing.JComboBox<String> cmbFilter;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

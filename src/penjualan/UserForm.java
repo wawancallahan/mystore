@@ -111,7 +111,7 @@ public class UserForm extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 30, 390, -1));
+        jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 270, -1));
 
         jLabel1.setText("Pencarian");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, 20));

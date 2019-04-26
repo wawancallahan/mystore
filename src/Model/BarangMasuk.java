@@ -33,6 +33,71 @@ public class BarangMasuk extends ConnectionDB implements ModelInterface {
                 ;
     }
     
+    public List<BarangMasukLib> getItemsFilter(String filterBy, String search) {
+        try {
+            ResultSet _ResultSet = this.listFilter(filterBy, search);
+            if ( ! _ResultSet.isBeforeFirst()) {
+                return null;
+            } else {
+                List<BarangMasukLib> items = new ArrayList<>();
+                
+                while (_ResultSet.next()) {
+                    
+                    String id = _ResultSet.getString("id");
+                    
+                    Optional<BarangMasukLib> constainItem = items.stream().filter(item -> String.valueOf(item.getId()).equals(id)).findFirst();
+                   
+                    if (constainItem.isPresent()) {
+                        List<String> request = new ArrayList<>();
+                            
+                        request.add(0, _ResultSet.getString("items_id"));
+                        request.add(1, _ResultSet.getString("items_kode"));
+                        request.add(2, _ResultSet.getString("items_nama"));
+                        request.add(3, _ResultSet.getString("items_jenis"));
+                        request.add(4, _ResultSet.getString("items_harga"));
+                        request.add(5, _ResultSet.getString("items_qty"));
+                            
+                        constainItem.get().setItemDetailObject(request);
+                    } else {
+                        BarangMasukLib newItem = new BarangMasukLib(
+                            _ResultSet.getInt("id"), 
+                            _ResultSet.getString("tanggal"),
+                            _ResultSet.getString("pemasok"),
+                            _ResultSet.getInt("item_id"),
+                            _ResultSet.getInt("qty")
+                        );
+                        
+                        String item_id = _ResultSet.getString("item_id");
+                        
+                        if ( ! _ResultSet.wasNull()) {
+                            
+                            List<String> request = new ArrayList<>();
+                            
+                            request.add(0, _ResultSet.getString("items_id"));
+                            request.add(1, _ResultSet.getString("items_kode"));
+                            request.add(2, _ResultSet.getString("items_nama"));
+                            request.add(3, _ResultSet.getString("items_jenis"));
+                            request.add(4, _ResultSet.getString("items_harga"));
+                            request.add(5, _ResultSet.getString("items_qty"));
+                            
+                            newItem.setItemDetailObject(request);
+                        }
+                        
+                        items.add(
+                            newItem
+                         );
+                    }
+                }
+                
+                return items;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return null;
+    }
+    
     public List<BarangMasukLib> getItems() {
         try {
             ResultSet _ResultSet = this.list();
@@ -154,6 +219,28 @@ public class BarangMasuk extends ConnectionDB implements ModelInterface {
                         " SELECT id FROM items WHERE items.id = " + this.table + ".item_id" +
                         " LIMIT 1 )" +
                         "  ORDER BY id DESC";
+        try {
+            ResultSet _ResultSet = super.ExecuteQuery(query);
+            
+            return _ResultSet;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return null;
+    }
+    
+    public ResultSet listFilter(String filterBy, String search) {
+        filterBy = filterBy.toLowerCase();
+        
+        String query = "SELECT import_transactions.id, import_transactions.item_id, import_transactions.tanggal, import_transactions.pemasok, import_transactions.qty, " +
+                        " items.id AS items_id, items.kode AS items_kode, items.nama AS items_nama, items.jenis AS items_jenis, items.harga AS items_harga, items.qty AS items_qty " +
+                        " FROM " + this.table + 
+                        " LEFT JOIN " +
+                        " items ON items.id = (" +
+                        " SELECT id FROM items WHERE items.id = " + this.table + ".item_id" +
+                        " LIMIT 1 )" +
+                        "  WHERE " + filterBy + " LIKE '%" + search + "%' ORDER BY id DESC";
         try {
             ResultSet _ResultSet = super.ExecuteQuery(query);
             

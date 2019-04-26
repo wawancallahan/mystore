@@ -32,6 +32,7 @@ public class TransaksiForm extends javax.swing.JFrame {
         transaksiModel = new Transaksi();
         
         this.fillTable();
+        this.fillCmbFilter();
     }
     
     public static TransaksiForm showForm() {
@@ -40,6 +41,12 @@ public class TransaksiForm extends javax.swing.JFrame {
         }
         
         return transaksiIndexForm;
+    }
+    
+    private void fillCmbFilter() {
+        cmbFilter.addItem("Pembeli");
+        
+        cmbFilter.setSelectedIndex(-1);
     }
     
     public void fillTable() {
@@ -106,6 +113,8 @@ public class TransaksiForm extends javax.swing.JFrame {
         table = new javax.swing.JTable();
         txtCari = new javax.swing.JTextField();
         btnHapus = new javax.swing.JButton();
+        cmbFilter = new javax.swing.JComboBox<>();
+        btnCari = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -145,7 +154,7 @@ public class TransaksiForm extends javax.swing.JFrame {
         jScrollPane1.setViewportView(table);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 390, 320));
-        jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 390, -1));
+        jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, 190, -1));
 
         btnHapus.setText("Hapus");
         btnHapus.setPreferredSize(new java.awt.Dimension(71, 23));
@@ -156,7 +165,17 @@ public class TransaksiForm extends javax.swing.JFrame {
         });
         jPanel1.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 490, 400));
+        jPanel1.add(cmbFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 120, -1));
+
+        btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, 60, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 490, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -192,6 +211,57 @@ public class TransaksiForm extends javax.swing.JFrame {
         
         JOptionPane.showMessageDialog(rootPane, "Data Belum Terpilih", "Informasi", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        // TODO add your handling code here:
+        if ( ! (cmbFilter.getSelectedIndex() == -1 || txtCari.getText().equals(""))) {
+            try {
+                Object[] column = new String[]{"id", "#", "Pembeli", "Tanggal", "Jumlah", "Total"};
+
+                Object[][] data = new Object[][]{
+                };
+
+                DefaultTableModel model = new DefaultTableModel(data, column){
+
+                    @Override
+                        public boolean isCellEditable(int row, int col){
+                                return false;
+                        }
+                };
+
+                List<TransaksiLib> transaksiObject = this.transaksiModel.getItemsFilter(cmbFilter.getSelectedItem().toString(), txtCari.getText());
+                model.setRowCount(0);
+
+                if (transaksiObject != null) {
+                    int index = 0;
+
+                    for (TransaksiLib item : transaksiObject) {
+                        index++;
+
+                        Object[] rowData = new Object[] {
+                           item.getId(),
+                           String.valueOf(index),
+                           item.getCustomer(),
+                           item.getDate(),
+                           String.valueOf(item.getTransaksiDetailCount()),
+                           item.getTotal().toString()
+                        };
+
+                        model.addRow(rowData);
+                    }
+                }
+
+                this.table.setModel(model);
+                this.table.getColumnModel().getColumn(0).setMinWidth(0);
+                this.table.getColumnModel().getColumn(0).setMaxWidth(0);
+                this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            this.fillTable();
+        }
+    }//GEN-LAST:event_btnCariActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,8 +299,10 @@ public class TransaksiForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCari;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnTambah;
+    private javax.swing.JComboBox<String> cmbFilter;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

@@ -3,24 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Model/Transaksi.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_gudang/barang_masuk/BarangMasukForm.java</file>
+            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Model/Transaksi.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_gudang/barang/BarangEdit.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_gudang/barang/BarangCreate.java</file>
+            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Model/User.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_gudang/barang_masuk/BarangMasukCreate.java</file>
+            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/UserEdit.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_kasir/transaksi/TransaksiCreate.java</file>
-            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_kasir/Dashboard.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Lib/BarangComboBoxLib.java</file>
-            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Lib/BarangLib.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_gudang/barang/BarangForm.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Model/Barang.java</file>
-            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_gudang/Dashboard.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Model/BarangMasuk.java</file>
+            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/UserCreate.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_kasir/transaksi/TransaksiForm.java</file>
-            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Lib/TransaksiLib.java</file>
-            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Model/TransaksiDetail.java</file>
+            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Lib/TransaksiTemporaryLib.java</file>
+            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/UserForm.java</file>
             <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/penjualan/admin_gudang/barang_masuk/BarangMasukEdit.java</file>
-            <file>file:/C:/Users/Timy/Documents/NetBeansProjects/Penjualan/src/Lib/BarangMasukLib.java</file>
         </group>
     </open-files>
 </project-private>

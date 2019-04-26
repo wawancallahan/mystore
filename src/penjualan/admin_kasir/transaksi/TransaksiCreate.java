@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import Model.Transaksi;
 import Model.TransaksiDetail;
 import java.awt.HeadlessException;
+import javax.swing.ComboBoxModel;
 
 public class TransaksiCreate extends javax.swing.JFrame {
 
@@ -374,17 +375,34 @@ public class TransaksiCreate extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        // TODO add your handling code here:
-        
+        // TODO add your handling code here: 
+        cmbBarang.setSelectedIndex(-1);
         int row = table.getSelectedRow();
         
         if (row != -1) {
+            Integer id = Integer.valueOf(table.getValueAt(row, 0).toString());
+        
             for (Iterator<TransaksiTemporaryLib> iter = transaksiTemporaryObject.listIterator(); iter.hasNext(); ) {
-              TransaksiTemporaryLib item = iter.next();
+                TransaksiTemporaryLib item = iter.next();
               
-              if (String.valueOf(item.getId()).equals(String.valueOf(table.getValueAt(row, 0)))) {
-                  iter.remove();
-              }
+                if (String.valueOf(item.getId()).equals(String.valueOf(table.getValueAt(row, 1)))) {
+                    
+                     ComboBoxModel cmbModel = cmbBarang.getModel();
+                     
+                     for (int i = 0; i < cmbModel.getSize(); i++) {
+                        Object element = cmbModel.getElementAt(i);
+                         
+                        BarangComboBoxLib itemBarang = (BarangComboBoxLib) element;
+                        
+                        if (itemBarang.getId().equals(item.getItemId())) {
+                            String qty = table.getValueAt(row, 4).toString();
+                        
+                            itemBarang.incrementQty(Integer.parseInt(qty));
+                        }
+                     }
+                    
+                    iter.remove();
+                }
             }
             
             setTotalHarga();
@@ -396,6 +414,13 @@ public class TransaksiCreate extends javax.swing.JFrame {
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
+        for (Iterator<TransaksiTemporaryLib> iter = transaksiTemporaryObject.listIterator(); iter.hasNext(); ) {
+            TransaksiTemporaryLib item = iter.next();
+
+            iter.remove();
+        }
+        cmbBarang.setSelectedIndex(-1);
+        setCmbBarang();
         zeroFillTable();
         setTable();
         txtTotal.setText("");

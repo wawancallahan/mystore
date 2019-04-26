@@ -33,6 +33,39 @@ public class Barang extends ConnectionDB implements ModelInterface {
         super.setConnection();
     }
     
+    public List<BarangLib> getItemsFilter(String filterBy, String search) {
+         try {
+            ResultSet _ResultSet;
+            if (!"".equals(search)) {
+                _ResultSet = this.listFilter(filterBy, search);
+            } else {
+                _ResultSet = this.list();
+            }
+            if ( ! _ResultSet.isBeforeFirst()) {
+                return null;
+            } else {
+                List<BarangLib> barangObject = new ArrayList<>();
+                
+                while (_ResultSet.next()) {
+                    barangObject.add(
+                       new BarangLib(_ResultSet.getInt("id"),
+                                     _ResultSet.getString("kode"),
+                                     _ResultSet.getString("nama"),
+                                     _ResultSet.getString("jenis"),
+                                     _ResultSet.getInt("harga"),
+                                     _ResultSet.getInt("qty"))
+                    );
+                }
+                
+                return barangObject;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return null;
+    }
+    
     public List<BarangLib> getItems() {
         try {
             ResultSet _ResultSet = this.list();
@@ -122,6 +155,21 @@ public class Barang extends ConnectionDB implements ModelInterface {
     @Override
     public ResultSet list() {
         String query = "SELECT * FROM " + this.table + " ORDER BY id DESC";
+        try {
+            ResultSet _ResultSet = super.ExecuteQuery(query);
+            
+            return _ResultSet;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return null;
+    }
+    
+    public ResultSet listFilter(String filterBy, String search) {
+        filterBy = filterBy.toLowerCase();
+        
+        String query = "SELECT * FROM " + this.table + " WHERE " + filterBy + " LIKE '%" + search + "%' ORDER BY id DESC";
         try {
             ResultSet _ResultSet = super.ExecuteQuery(query);
             

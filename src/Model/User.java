@@ -33,6 +33,29 @@ public class User extends ConnectionDB implements ModelInterface {
         super.setConnection();
     }
     
+    public Boolean checkUsername(String username, String oldUsername) {
+        String query = "";
+        if (oldUsername != null) {
+            query = "SELECT * FROM " + this.table + " WHERE username = '" + username + "' AND username != '" + oldUsername + "'";
+        } else {
+            query = "SELECT * FROM " + this.table + " WHERE username = '" + username + "'";
+        }
+     
+        try {
+            ResultSet _ResultSet = super.ExecuteQuery(query);
+            
+            if(_ResultSet.first()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return false;
+    }
+    
     public List<UserLib> getItems() {
         try {
              ResultSet _ResultSet = this.list();
@@ -137,7 +160,12 @@ public class User extends ConnectionDB implements ModelInterface {
 
     @Override
     public boolean update(List<String> request, Integer id) {
-        String query = "";
+        String query = "UPDATE " + table + " SET  " +
+                        "nama = '" + request.get(0) + "'," + 
+                        "username = '" + request.get(1) + "'," + 
+                        "password = '" + request.get(2) + "'," + 
+                        "type = '" + request.get(3) + "'" + 
+                        "WHERE id = '" + id + "'";
         try {
             Integer _ResultSet = super.ExecuteUpdate(query);
             

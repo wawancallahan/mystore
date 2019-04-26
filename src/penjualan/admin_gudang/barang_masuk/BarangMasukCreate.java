@@ -182,9 +182,9 @@ public class BarangMasukCreate extends javax.swing.JFrame {
         boolean create = this.barangMasukModel.create(request);
         
         if (create) {
-            this.dispose();
-            
             BarangMasukForm.showForm().fillTable();
+            
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }

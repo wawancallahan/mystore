@@ -60,6 +60,11 @@ public class BarangComboBoxLib {
     }
     
     
+    public void incrementQty(Integer qty) {
+        this.qty = this.qty + qty;
+    }
+    
+    
     @Override
     public String toString() {
         return this.kode + " - " + this.nama;

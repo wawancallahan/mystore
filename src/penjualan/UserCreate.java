@@ -119,14 +119,17 @@ public class UserCreate extends javax.swing.JFrame {
         request.add(2, String.valueOf(txtPassword.getPassword()));
         request.add(3, cmbJenis.getSelectedItem().toString());
         
-        boolean create = this.userModel.create(request);
+        if (this.userModel.checkUsername(txtUsername.getText(), null)) {
+            boolean create = this.userModel.create(request);
         
-        if (create) {
-            this.dispose();
-            
-            UserForm.showForm().fillTable();
+            if (create) {
+                UserForm.showForm().fillTable();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Terjadi Kesalahan Proses Simpan", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Username Telah Ada", "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
